@@ -1,200 +1,139 @@
-import 'package:cached_network_image/cached_network_image.dart';
+// ignore_for_file: invalid_use_of_protected_member
+
+import 'package:ecommerce/controller/homepage_controller.dart';
+import 'package:ecommerce/view/cart_view.dart';
+import 'package:ecommerce/widgets/product_card_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import '../widgets/cart_counter_widget.dart';
 
 class HomePageView extends StatelessWidget {
-  const HomePageView({Key? key}) : super(key: key);
+  HomePageView({Key? key}) : super(key: key);
+
+  final _controller = Get.put(HomepageController());
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey.shade100,
-      appBar: AppBar(
+    return SafeArea(
+      child: Scaffold(
         backgroundColor: Colors.grey.shade100,
-        elevation: 0,
-        title: Row(
-          children: [
-            SizedBox(
-              width: 30,
-              height: 30,
-              child: Image.asset('assets/handwave.png'),
-            ),
-            const SizedBox(
-              width: 12,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text(
-                  'Good Morning',
-                  style: TextStyle(fontSize: 14, color: Colors.grey),
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                Text(
-                  'Prakash',
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black),
-                )
-              ],
-            ),
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.grey.shade100,
+          elevation: 0,
+          title: Row(
+            children: [
+              SizedBox(
+                width: 30,
+                height: 30,
+                child: Image.asset('assets/handwave.png'),
+              ),
+              const SizedBox(
+                width: 12,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text(
+                    'Good Morning',
+                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  Text(
+                    'Prakash',
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
+                  )
+                ],
+              ),
+            ],
+          ),
+          actions: [
+            Obx(() {
+              return CartCounterWidget(
+                onTap: () =>
+                    Get.to(CartView(), transition: Transition.rightToLeft),
+                count: _controller.cartProducts.length.toString(),
+              );
+            })
           ],
         ),
-        actions: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-            child: Stack(
-              alignment: Alignment.topRight,
-              children: const [
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Icon(
-                    Icons.shopping_cart,
-                    color: Colors.black87,
+        body: Obx(() {
+          return _controller.isLoading.value
+              ? const Center(
+                  child: CupertinoActivityIndicator(
+                  radius: 12,
+                ))
+              : Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Products',
+                          style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black87),
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        GridView.builder(
+                            physics: const ScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: _controller.products.length,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    childAspectRatio: 0.7,
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 20,
+                                    mainAxisSpacing: 20),
+                            itemBuilder: (context, index) {
+                              return ProductCardWidget(
+                                onTap: () {
+                                  //store id seperately
+                                  _controller.cartProductIds
+                                      .add(_controller.products[index].id!);
+
+                                  //Store element in cart list
+                                  _controller.addToCart(
+                                      _controller.products[index].id!,
+                                      _controller.products[index].name ?? '',
+                                      _controller.products[index].imageLink ??
+                                          '',
+                                      double.parse(
+                                          _controller.products[index].price ??
+                                              ''),
+                                      1);
+                                  //to refresh the ui to update the color of add button and update count on cart
+                                  _controller.cartProductIds.refresh();
+                                  _controller.products.refresh();
+                                },
+                                title: _controller.products[index].name ?? '',
+                                price:
+                                    '\$${_controller.products[index].price ?? ''}',
+                                imageUrl:
+                                    _controller.products[index].imageLink ?? '',
+                                isAddToCart: _controller.cartProductIds
+                                    .contains(
+                                        _controller.products.value[index].id!),
+                              );
+                            }),
+                      ],
+                    ),
                   ),
-                ),
-                Text(
-                  '99',
-                  style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black),
-                )
-              ],
-            ),
-          )
-        ],
+                );
+        }),
       ),
-      body: false
-          ? const Center(
-              child: CupertinoActivityIndicator(
-              radius: 12,
-            ))
-          : Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Products',
-                      style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black87),
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    GridView.builder(
-                        physics: const ScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: 5,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                childAspectRatio: 0.7,
-                                crossAxisCount: 2,
-                                crossAxisSpacing: 20,
-                                mainAxisSpacing: 20),
-                        itemBuilder: (context, index) {
-                          return Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 8),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                color: Colors.white),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Expanded(
-                                  flex: 5,
-                                  child: CachedNetworkImage(
-                                    imageUrl:
-                                        "https://m.media-amazon.com/images/I/61rDecG7fdL._AC_UY218_.jpg",
-                                    placeholder: (context, url) =>
-                                        const CupertinoActivityIndicator(),
-                                    errorWidget: (context, url, error) =>
-                                        Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: const [
-                                        SizedBox(
-                                          height: 20,
-                                        ),
-                                        Icon(
-                                          Icons.error,
-                                          color: Colors.grey,
-                                        ),
-                                        SizedBox(
-                                          height: 8,
-                                        ),
-                                        Text(
-                                          'No Image',
-                                          style: TextStyle(
-                                              color: Colors.grey, fontSize: 12),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 12,
-                                ),
-                                Expanded(
-                                  flex: 2,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        'Product name',
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            letterSpacing: 0.5,
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.black87),
-                                      ),
-                                      const SizedBox(
-                                        height: 8,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: const [
-                                          Text(
-                                            '\$935',
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black),
-                                          ),
-                                          CircleAvatar(
-                                            radius: 10,
-                                            backgroundColor: Colors.black,
-                                            child: Icon(
-                                              Icons.add,
-                                              color: Colors.white,
-                                              size: 12,
-                                            ),
-                                          )
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                          );
-                        })
-                  ],
-                ),
-              ),
-            ),
     );
   }
 }
