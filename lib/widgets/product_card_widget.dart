@@ -87,10 +87,13 @@ class ProductCardWidget extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: isAddToCart! ? onRemove : onAdd,
-                      child: CircleAvatar(
-                        radius: 10,
-                        backgroundColor:
-                            isAddToCart! ? Colors.red : Colors.black,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          color: isAddToCart! ? Colors.red : Colors.black,
+                        ),
                         child: Icon(
                           isAddToCart! ? Icons.remove : Icons.add,
                           color: Colors.white,

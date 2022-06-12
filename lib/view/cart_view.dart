@@ -66,7 +66,10 @@ class CartView extends StatelessWidget {
                               .remove(_controller.cartProducts[index].id);
                           _controller.calculateRemovePrice(
                               price:
-                                  _controller.cartProducts[index].price ?? 0.0);
+                                  _controller.cartProducts[index].price ?? 0.0,
+                              quantity:
+                                  _controller.cartProducts[index].quantity ??
+                                      1);
                           _controller.cartProducts.removeAt(index);
 
                           _controller.products.refresh();

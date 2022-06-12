@@ -57,8 +57,8 @@ class HomePageView extends StatelessWidget {
           actions: [
             Obx(() {
               return CartCounterWidget(
-                onTap: () =>
-                    Get.to(CartView(), transition: Transition.rightToLeft),
+                onTap: () => Get.to(() => CartView(),
+                    transition: Transition.rightToLeft),
                 count: _controller.cartProducts.length.toString(),
               );
             })
@@ -100,7 +100,8 @@ class HomePageView extends StatelessWidget {
                             itemBuilder: (context, index) {
                               return ProductCardWidget(
                                 onAdd: () => onAdd(index),
-                                onRemove: () => onRemove(index),
+                                onRemove: () => onRemove(index,
+                                    _controller.products.value[index].id!),
                                 title: _controller.products[index].name ?? '',
                                 price:
                                     '\$${_controller.products[index].price ?? ''}',
@@ -139,14 +140,19 @@ class HomePageView extends StatelessWidget {
     _controller.products.refresh();
   }
 
-  onRemove(int index) {
+  onRemove(int index, int id) {
     //removing the id stored seperately
-    _controller.cartProductIds.remove(_controller.cartProducts[index].id);
-    //removing the price of a removed product
-    _controller.calculateRemovePrice(
-        price: _controller.cartProducts[index].price ?? 0.0);
+    _controller.cartProductIds.remove(_controller.products[index].id);
+
     //removing the product from main list
-    _controller.cartProducts.removeAt(index);
+    _controller.cartProducts.removeWhere((element) {
+      if (element.id == id) {
+        _controller.calculateRemovePrice(
+            price: element.price!, quantity: element.quantity!);
+      }
+
+      return element.id == id;
+    });
 
     _controller.products.refresh();
   }
