@@ -11,6 +11,9 @@ class HomepageController extends GetxController {
   var products = <ProductsModel>[].obs;
   var cartProducts = <CartItem>[].obs;
   var cartProductIds = <int>[].obs;
+  var subTotal = 0.0.obs;
+  var charges = 5.0.obs;
+  var totalPrice = 0.0.obs;
   @override
   void onInit() {
     super.onInit();
@@ -35,5 +38,42 @@ class HomepageController extends GetxController {
         price: price,
         quantity: quantity));
     cartProducts.refresh();
+  }
+
+  //calculate add price
+  calculateAddPrice({int quantity = 1, double price = 0.0}) {
+    final sub = price * quantity;
+    subTotal.value += sub;
+    totalPrice.value = subTotal.value + charges.value;
+  }
+
+  //calculate remove price
+  calculateRemovePrice({int quantity = 1, double price = 0.0}) {
+    final sub = price * quantity;
+    subTotal.value -= sub;
+    totalPrice.value = subTotal.value + charges.value;
+  }
+
+  //add quantity
+  onAdd(int index) {
+    if (cartProducts.value[index].quantity! < 5) {
+      cartProducts.value[index].quantity =
+          cartProducts.value[index].quantity! + 1;
+      subTotal.value += cartProducts.value[index].price!;
+      totalPrice.value = subTotal.value + charges.value;
+      cartProducts.refresh();
+    }
+  }
+
+  //subtract quantity
+  onRemove(int index) {
+    if (cartProducts.value[index].quantity! > 1) {
+      cartProducts.value[index].quantity =
+          cartProducts.value[index].quantity! - 1;
+      1;
+      subTotal.value -= cartProducts.value[index].price!;
+      totalPrice.value = subTotal.value + charges.value;
+      cartProducts.refresh();
+    }
   }
 }

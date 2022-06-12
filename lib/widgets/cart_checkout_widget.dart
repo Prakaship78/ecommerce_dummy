@@ -44,7 +44,7 @@ class CartCheckoutWidget extends StatelessWidget {
                       letterSpacing: 0.5),
                 ),
                 Text(
-                  subtotal ?? '',
+                  "\$${subtotal ?? ''}",
                   style: const TextStyle(
                       color: Colors.grey,
                       fontWeight: FontWeight.w600,
@@ -66,7 +66,7 @@ class CartCheckoutWidget extends StatelessWidget {
                       letterSpacing: 0.5),
                 ),
                 Text(
-                  charges ?? '',
+                  "\$${charges ?? ''}",
                   style: const TextStyle(
                       color: Colors.grey,
                       fontWeight: FontWeight.w600,
@@ -88,7 +88,7 @@ class CartCheckoutWidget extends StatelessWidget {
                       letterSpacing: 0.5),
                 ),
                 Text(
-                  total ?? '',
+                  "\$${total ?? ''}",
                   style: const TextStyle(
                       fontSize: 18,
                       color: Colors.black,

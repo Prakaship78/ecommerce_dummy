@@ -99,25 +99,8 @@ class HomePageView extends StatelessWidget {
                                     mainAxisSpacing: 20),
                             itemBuilder: (context, index) {
                               return ProductCardWidget(
-                                onTap: () {
-                                  //store id seperately
-                                  _controller.cartProductIds
-                                      .add(_controller.products[index].id!);
-
-                                  //Store element in cart list
-                                  _controller.addToCart(
-                                      _controller.products[index].id!,
-                                      _controller.products[index].name ?? '',
-                                      _controller.products[index].imageLink ??
-                                          '',
-                                      double.parse(
-                                          _controller.products[index].price ??
-                                              ''),
-                                      1);
-                                  //to refresh the ui to update the color of add button and update count on cart
-                                  _controller.cartProductIds.refresh();
-                                  _controller.products.refresh();
-                                },
+                                onAdd: () => onAdd(index),
+                                onRemove: () => onRemove(index),
                                 title: _controller.products[index].name ?? '',
                                 price:
                                     '\$${_controller.products[index].price ?? ''}',
@@ -135,5 +118,36 @@ class HomePageView extends StatelessWidget {
         }),
       ),
     );
+  }
+
+  onAdd(int index) {
+    //store id seperately
+    _controller.cartProductIds.add(_controller.products[index].id!);
+
+    //Store element in cart list
+    _controller.addToCart(
+        _controller.products[index].id!,
+        _controller.products[index].name ?? '',
+        _controller.products[index].imageLink ?? '',
+        double.parse(_controller.products[index].price ?? ''),
+        1);
+    //calculate
+    _controller.calculateAddPrice(
+        price: double.parse(_controller.products[index].price ?? '0.0'));
+    //to refresh the ui to update the color of add button and update count on cart
+    _controller.cartProductIds.refresh();
+    _controller.products.refresh();
+  }
+
+  onRemove(int index) {
+    //removing the id stored seperately
+    _controller.cartProductIds.remove(_controller.cartProducts[index].id);
+    //removing the price of a removed product
+    _controller.calculateRemovePrice(
+        price: _controller.cartProducts[index].price ?? 0.0);
+    //removing the product from main list
+    _controller.cartProducts.removeAt(index);
+
+    _controller.products.refresh();
   }
 }

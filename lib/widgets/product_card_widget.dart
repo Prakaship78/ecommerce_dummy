@@ -7,15 +7,17 @@ class ProductCardWidget extends StatelessWidget {
   final bool? isAddToCart;
   final String? title;
   final String? price;
-  final VoidCallback? onTap;
-  const ProductCardWidget({
-    Key? key,
-    this.imageUrl,
-    this.title,
-    this.price,
-    this.onTap,
-    this.isAddToCart,
-  }) : super(key: key);
+  final VoidCallback? onAdd;
+  final VoidCallback? onRemove;
+  const ProductCardWidget(
+      {Key? key,
+      this.imageUrl,
+      this.title,
+      this.price,
+      this.onAdd,
+      this.isAddToCart,
+      this.onRemove})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -84,13 +86,13 @@ class ProductCardWidget extends StatelessWidget {
                           color: Colors.black),
                     ),
                     GestureDetector(
-                      onTap: isAddToCart! ? () {} : onTap,
+                      onTap: isAddToCart! ? onRemove : onAdd,
                       child: CircleAvatar(
                         radius: 10,
                         backgroundColor:
-                            isAddToCart! ? Colors.grey : Colors.black,
-                        child: const Icon(
-                          Icons.add,
+                            isAddToCart! ? Colors.red : Colors.black,
+                        child: Icon(
+                          isAddToCart! ? Icons.remove : Icons.add,
                           color: Colors.white,
                           size: 12,
                         ),

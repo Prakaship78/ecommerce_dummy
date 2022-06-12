@@ -3,7 +3,7 @@ class CartItem {
   final String? name;
   final String? imageUrl;
   final double? price;
-  final int? quantity;
+  int? quantity;
 
-  CartItem({this.id, this.name, this.imageUrl, this.price, this.quantity});
+  CartItem({this.id, this.name, this.imageUrl, this.price, this.quantity = 1});
 }

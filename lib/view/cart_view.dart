@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_use_of_protected_member
+
 import 'package:ecommerce/controller/homepage_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -57,14 +59,20 @@ class CartView extends StatelessWidget {
                         imageUrl: _controller.cartProducts[index].imageUrl,
                         title: _controller.cartProducts[index].name,
                         price: _controller.cartProducts[index].price.toString(),
-                        quantity: 1.toString(),
+                        quantity: _controller.cartProducts.value[index].quantity
+                            .toString(),
                         onRemove: () {
                           _controller.cartProductIds
                               .remove(_controller.cartProducts[index].id);
+                          _controller.calculateRemovePrice(
+                              price:
+                                  _controller.cartProducts[index].price ?? 0.0);
                           _controller.cartProducts.removeAt(index);
 
                           _controller.products.refresh();
                         },
+                        onIncrease: () => _controller.onAdd(index),
+                        onDecrease: () => _controller.onRemove(index),
                       );
                     },
                   ),
@@ -73,7 +81,11 @@ class CartView extends StatelessWidget {
         bottomNavigationBar: Obx(() {
           return _controller.cartProducts.isEmpty
               ? const SizedBox()
-              : const CartCheckoutWidget();
+              : CartCheckoutWidget(
+                  charges: _controller.charges.toString(),
+                  subtotal: _controller.subTotal.toStringAsFixed(2),
+                  total: _controller.totalPrice.toStringAsFixed(2),
+                );
         }),
       ),
     );
