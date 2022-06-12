@@ -1,4 +1,7 @@
+import 'package:ecommerce/widgets/sucess_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
+import 'package:get/get.dart';
 
 class CartCheckoutWidget extends StatelessWidget {
   final String? subtotal;
@@ -100,19 +103,32 @@ class CartCheckoutWidget extends StatelessWidget {
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(primary: Colors.black87),
-            onPressed: () {},
-            child: const SizedBox(
+            onPressed: () {
+              Get.bottomSheet(const SuccessWidget(), isScrollControlled: false);
+            },
+            child: SizedBox(
               width: double.infinity,
               height: 40,
-              child: Center(
-                child: Text(
-                  'Checkout ',
-                  style: TextStyle(
-                      letterSpacing: 1,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Pay Now ',
+                    style: TextStyle(
+                        letterSpacing: 1,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  ),
+                  const SizedBox(
+                    width: 12,
+                  ),
+                  SizedBox(
+                    height: 30,
+                    child: Lottie.asset('assets/payment.json'),
+                  )
+                ],
               ),
             ),
           )
