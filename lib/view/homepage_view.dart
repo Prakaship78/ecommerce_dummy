@@ -93,7 +93,7 @@ class HomePageView extends StatelessWidget {
                             itemCount: _controller.products.length,
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
-                                    childAspectRatio: 0.7,
+                                    childAspectRatio: 0.6,
                                     crossAxisCount: 2,
                                     crossAxisSpacing: 20,
                                     mainAxisSpacing: 20),

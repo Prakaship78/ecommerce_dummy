@@ -13,7 +13,7 @@ class SuccessWidget extends StatelessWidget {
       decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-          color: Colors.white),
+          color: Colors.grey),
       child: Center(
         child: Lottie.asset('assets/sucess.json'),
       ),
