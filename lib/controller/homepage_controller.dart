@@ -6,8 +6,9 @@ import 'package:ecommerce/service/products_service.dart';
 import 'package:get/get.dart';
 
 class HomepageController extends GetxController {
+  final ProductsService _productsService;
+  HomepageController(this._productsService);
   RxBool isLoading = false.obs;
-  final _productsService = ProductsService();
 
   var products = <ProductsModel>[].obs;
   var cartProducts = <CartItem>[].obs;

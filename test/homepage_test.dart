@@ -19,8 +19,8 @@ void main() {
   //SETUP RUN BEFORE EVERY TEST
   setUp(
     () {
-      sut = HomepageController();
       mockProductServiceTest = MockProductServiceTest();
+      sut = HomepageController(mockProductServiceTest);
     },
   );
 
@@ -54,20 +54,20 @@ void main() {
   });
 
   group('Homepage Controller tests', () {
-    test(
-      ''' FETCH DATA FROM JSON
-     isLoading
-    Products after api call
-    isLoading after api call
-
-     ''',
-      () async {
-        expect(sut.isLoading.value, false);
-        await sut.fetchProducts();
-        expect(sut.products.value, isNotNull);
-        expect(sut.isLoading.value, false);
-      },
-    );
+    test('Controller fetch function test', () async {
+      final model = <ProductsModel>[
+        ProductsModel(brand: 'test branch 1', description: 'test desc 1')
+      ];
+      when(mockProductServiceTest.getProducts()).thenAnswer((_) async {
+        return model;
+      });
+      expect(sut.isLoading.value, false);
+      final future = sut.fetchProducts();
+      expect(sut.isLoading.value, true);
+      await future;
+      expect(sut.products.value, model);
+      expect(sut.isLoading.value, false);
+    });
 
     test('Add to cart', () {
       expect(sut.cartProducts.value.length, 0);

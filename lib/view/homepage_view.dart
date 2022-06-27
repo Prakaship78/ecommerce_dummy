@@ -1,6 +1,7 @@
 // ignore_for_file: invalid_use_of_protected_member
 
 import 'package:ecommerce/controller/homepage_controller.dart';
+import 'package:ecommerce/service/products_service.dart';
 import 'package:ecommerce/view/cart_view.dart';
 import 'package:ecommerce/widgets/product_card_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,7 +13,7 @@ import '../widgets/cart_counter_widget.dart';
 class HomePageView extends StatelessWidget {
   HomePageView({Key? key}) : super(key: key);
 
-  final _controller = Get.put(HomepageController());
+  final _controller = Get.put(HomepageController(ProductsService()));
 
   @override
   Widget build(BuildContext context) {
