@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import '../utils/constant.dart';
 
 class ProductsService {
-  static Future<List<ProductsModel>> getProducts() async {
+  Future<List<ProductsModel>> getProducts() async {
     var client = http.Client();
 
     var response = await client.get(

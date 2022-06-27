@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 
 class HomepageController extends GetxController {
   RxBool isLoading = false.obs;
+  final _productsService = ProductsService();
 
   var products = <ProductsModel>[].obs;
   var cartProducts = <CartItem>[].obs;
@@ -21,9 +22,9 @@ class HomepageController extends GetxController {
   }
 
 //function to fetch 1st api call when page loads
-  void fetchProducts() async {
+  Future<void> fetchProducts() async {
     isLoading.value = true;
-    products.value = await ProductsService.getProducts();
+    products.value = await _productsService.getProducts();
     if (products.isNotEmpty) {
       isLoading.value = false;
     }
