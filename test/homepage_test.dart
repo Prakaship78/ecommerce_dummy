@@ -1,17 +1,48 @@
 // ignore_for_file: invalid_use_of_protected_member
 
 import 'package:ecommerce/controller/homepage_controller.dart';
+import 'package:ecommerce/model/products_model.dart';
+import 'package:ecommerce/service/products_service.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 
+import 'homepage_test.mocks.dart';
+
+class ProductServiceTest extends Mock implements ProductsService {}
+
+@GenerateMocks([ProductServiceTest])
 void main() {
   late HomepageController sut;
+  late MockProductServiceTest mockProductServiceTest;
 
   //SETUP RUN BEFORE EVERY TEST
   setUp(
     () {
       sut = HomepageController();
+      mockProductServiceTest = MockProductServiceTest();
     },
   );
+
+  test('testing repo using mock', () async {
+    final model = <ProductsModel>[];
+    when(mockProductServiceTest.getProducts()).thenAnswer((_) async {
+      return model;
+    });
+    final res = await mockProductServiceTest.getProducts();
+
+    expect(res, isA<List<ProductsModel>>());
+    expect(res, model);
+  });
+
+  test('testing fetch repo throws exception', () async {
+    when((mockProductServiceTest.getProducts())).thenAnswer((_) async {
+      throw Exception();
+    });
+
+    final res = mockProductServiceTest.getProducts();
+    expect(res, throwsException);
+  });
 
   //TEAR DOWN RUN AFTER EVERY TEST
   // tearDown(body)
@@ -25,10 +56,10 @@ void main() {
   group('Homepage Controller tests', () {
     test(
       ''' FETCH DATA FROM JSON
-     isLoading 
+     isLoading
     Products after api call
     isLoading after api call
-    
+
      ''',
       () async {
         expect(sut.isLoading.value, false);

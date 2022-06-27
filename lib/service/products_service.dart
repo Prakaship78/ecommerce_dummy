@@ -12,7 +12,7 @@ class ProductsService {
     if (response.statusCode == 200) {
       return productsModelFromJson(response.body);
     } else {
-      return [];
+      throw Exception('Failed to load products');
     }
   }
 }
